@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import axios from 'axios';
 import $ from 'jquery';
 
@@ -8,7 +8,10 @@ export default class ItemsList extends Component {
         super(props);
         this.state = {
             items: [],
-            show: "0"
+            show: "0",
+            rating:0,
+            prating:0,
+            review:0
         }
     }
 
@@ -58,19 +61,101 @@ export default class ItemsList extends Component {
                     .then(res => { window.location.reload();console.log(res.data);})
                     .catch(err => console.log(err));
             }
-            // const newItem = {
-            //      name: tableData[0],
-            //      quantity: tableData[1],
-            //      available: tableData[2],
-            //      price: tableData[3],
-            //      status: tableData[4],
-            //      email: sessionStorage.getItem('email')
-            // }
-            // console.log(newItem);
-            // axios.post(' http://localhost:4000/api/items/dispatch', newItem)
-            //          .then(res => {console.log(res.data); window.location.reload();})
-            //          .catch(err => console.log(err));
-            // alert(tableData);
+         });
+
+         $('tbody').on('click', '#prating', function() {
+            var tableData = $(this).siblings("td").map(function(){
+                return $(this).text();
+            }).get();
+            var quan = prompt("Please Enter Rating: ");
+            while(quan === ""){
+                alert("Rating field is required");
+                quan = prompt("Please Enter Rating: ");
+            }
+            if(quan){
+                const newItem = {
+                    name: tableData[0],
+                    quan: quan
+                }
+                axios.post(' http://localhost:4000/api/items/prating', newItem)
+                    .then(res => { window.location.reload();console.log(res.data);})
+                    .catch(err => console.log(err));
+            }
+         });
+
+         $('tbody').on('click', '#reviews', function() {
+                var tableData = $(this).siblings("td").map(function(){
+                    return $(this).text();
+                }).get();
+
+                // console.log(tableData[6])
+    
+                axios.get(' http://localhost:4000/api/items/review', {
+                    params:{
+                        email:tableData[6]
+                    }
+                })
+                        .then(res => {
+                            var i = res.data.length;
+                            var data ='';
+                            for(var j=0;j<i;j++){
+                                data = data + res.data[j].review + "\n"
+                            }
+                            alert(data)
+                        })
+                        .catch(err => console.log(err));
+                // alert(tableData);
+            });
+
+         $('tbody').on('click', '#rating', function() {
+            var tableData = $(this).siblings("td").map(function(){
+                return $(this).text();
+            }).get();
+            var quan = prompt("Please Enter Rating: ");
+            while(quan === ""){
+                alert("Rating field is required");
+                quan = prompt("Please Enter Rating: ");
+            }
+            if(quan){
+                const newItem = {
+                    email: tableData[6],
+                    rating: tableData[8],
+                    quan: quan
+                }
+            console.log(newItem);
+                
+                axios.post(' http://localhost:4000/api/items/rating', newItem)
+                    .then(res => { window.location.reload();console.log(res.data);this.setState({rating:1})})
+                    .catch(err => console.log(err));
+            }
+         });
+         $('tbody').on('click', '#review', function() {
+            var tableData = $(this).siblings("td").map(function(){
+                return $(this).text();
+            }).get();
+            var quan = prompt("Please Enter Rating: ");
+            while(quan === ""){
+                alert("Rating field is required");
+                quan = prompt("Please Enter Rating: ");
+            }
+            if(quan){
+                const newItem = {
+                    name: tableData[0],
+                    quantity: tableData[1],
+                    oquantity: tableData[2],
+                    available: tableData[3],
+                    price: tableData[4],
+                    status: tableData[5],
+                    email: tableData[6],
+                    quant: quan,
+                    cemail: sessionStorage.getItem('email')
+                }
+            console.log(newItem);
+                
+                axios.post(' http://localhost:4000/api/items/reviews', newItem)
+                    .then(res => { window.location.reload();console.log(res.data);this.setState({rating:1})})
+                    .catch(err => console.log(err));
+            }
          });
     }
 
@@ -97,14 +182,6 @@ export default class ItemsList extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
-    // onDisp = () => {
-    //     alert('hi');
-    // }
-
-    // onCancel = () => {
-    //     alert('hello');
-    // }
-
     render() {
         return (
             <div>
@@ -128,6 +205,10 @@ export default class ItemsList extends Component {
                             <th>Status</th>
                             <th>Email</th>
                             <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,17 +217,26 @@ export default class ItemsList extends Component {
                             console.log(i);
                             console.log(currentItem.bought);
                             console.log(currentItem.bought[i]);
-                            return (
-                                <tr key={i}>
-                                    <td>{currentItem.name}</td>
-                                    <td>{currentItem.quantity}</td>
-                                    <td>{currentItem.bought[i].quantity}</td>
-                                    <td>{currentItem.available}</td>
-                                    <td>{currentItem.price}</td>
-                                    <td>{currentItem.status}</td>
-                                    <td>{currentItem.email}</td>
-                                    <td id="edit"><button className="btn btn-primary">Edit Order</button></td>
-                                </tr>
+                            return (                                   
+                                currentItem.bought.map((no,j) => {
+                                    console.log(no)
+                                    return (
+                                        <tr key={i,j}>
+                                            <td>{currentItem.name}</td>
+                                            <td>{currentItem.quantity}</td>
+                                            <td key={j}>{no.quantity}</td>
+                                            <td>{currentItem.available}</td>
+                                            <td>{currentItem.price}</td>
+                                            <td>{currentItem.status}</td>
+                                            <td>{currentItem.email}</td>
+                                            <td id="edit"><button>Edit Order</button></td>
+                                            {this.state.rating===0 ? <td id="rating"><button>Give Vendor Rating</button></td> : <td></td>}
+                                            <td id="prating"><button>Give Product Rating</button></td>
+                                            <td id="review"><button>Give Vendor Review</button></td>
+                                            <td id="reviews"><button>Get Vendor Review</button></td>
+                                        </tr>
+                                    )
+                                })
                             )
                         })
                     }
@@ -162,6 +252,9 @@ export default class ItemsList extends Component {
                         <th>Price</th>
                         <th>Status</th>
                         <th>Email</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,6 +269,9 @@ export default class ItemsList extends Component {
                                 <td>{currentItem.price}</td>
                                 <td>{currentItem.status}</td>
                                 <td>{currentItem.email}</td>
+                                <td><button id="rating">Give Vendor Rating</button></td>
+                                <td><button id="prating">Give Product Rating</button></td>
+                                <td><button id="review">Give Product Review</button></td>
                             </tr>
                         )
                     })

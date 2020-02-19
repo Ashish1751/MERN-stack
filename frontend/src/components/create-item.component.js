@@ -9,12 +9,17 @@ export default class CreateItem extends Component {
         this.state = {
             name: '',
             quantity: '',
-            price: ''
+            price: '',
+            file: ''
         }
     }
     
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value })
+    }
+
+    onChangef = (e) => {
+        this.setState({ file: e.target.files[0] })
     }
 
     onSubmit = (e) => {
@@ -25,17 +30,28 @@ export default class CreateItem extends Component {
             quantity: this.state.quantity,
             price: this.state.price,
             email: sessionStorage.getItem('email')
+            // file: this.state.file
         }
+        if(this.state.file){
+            const formData = new FormData()
+            formData.append('productImage',this.state.file)
+            formData.append('document',JSON.stringify(newItem))
 
-        console.log(newItem);
-        axios.post(' http://localhost:4000/api/items/add', newItem)
-             .then(res => console.log(res.data))
-             .catch(err => console.log(err));
+            console.log(formData);
+            axios.post(' http://localhost:4000/api/items/upload',formData)
+                 .then(res => {console.log(res.data); window.location.reload();})
+                 .catch(err => console.log(err));
+        } else {
+            axios.post('http://localhost:4000/api/items/add', newItem)
+                .then(res => {console.log(res.data); window.location.reload();})
+                .catch(err => console.log(err));
+        }
 
         this.setState({
             name: '',
             quantity: '',
-            price: ''
+            price: '',
+            file:''
         });
     }
 
@@ -73,6 +89,14 @@ export default class CreateItem extends Component {
                                min="1"
                                value={this.state.price}
                                onChange={this.onChange}
+                               />  
+                    </div>
+                    <div className="form-group">
+                        <label>Price: </label>
+                        <input type="file" 
+                               className="form-control" 
+                               name="productImage"
+                               onChange={this.onChangef}
                                />  
                     </div>
                     <div className="form-group">

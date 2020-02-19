@@ -35,6 +35,21 @@ let Item = new mongoose.Schema({
     ratingno: {
         type: Number,
         default: 0
+    },
+    crating: {
+        type: Number,
+        default: 0
+    },
+    cratingno: {
+        type: Number,
+        default: 0
+    },
+    review:{
+        type: String,
+        default:'H'
+    },
+    productImage: {
+        type:String
     }
 });
 

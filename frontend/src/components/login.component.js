@@ -32,7 +32,7 @@ export default class Login extends Component {
                 sessionStorage.setItem('type',res.data.user.type);
                 console.log(sessionStorage.getItem('type'));
                 // this.changeState(sessionStorage.getItem('token'),true,false);
-                 window.open('http://localhost:3000/items', "_self");
+                 {sessionStorage.getItem('type')==="Vendor" ? window.open('http://localhost:3000/items', "_self") : window.open('http://localhost:3000/citems', "_self")}
                 });
 
         this.setState({

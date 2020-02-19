@@ -44,6 +44,28 @@ export default class PurchaseItem extends Component {
             }
             // alert(tableData);
         });
+
+        // $('tbody').on('click', '#review', function() {
+        //     var tableData = $(this).siblings("td").map(function(){
+        //         return $(this).text();
+        //     }).get();
+
+        //     axios.get(' http://localhost:4000/api/items/review', {
+        //         params:{
+        //             email:tableData[4]
+        //         }
+        //     })
+        //             .then(res => {
+        //                 var i = res.data.length;
+        //                 var data ='';
+        //                 for(var j=0;j<i;j++){
+        //                     data = data.toString() + res.data[j].review.toString() + "\n"
+        //                 }
+        //                 alert(data)
+        //             })
+        //             .catch(err => console.log(err));
+        //     // alert(tableData);
+        // });
     }
     
     onChange = (e) => {
@@ -95,9 +117,9 @@ export default class PurchaseItem extends Component {
               name: this.state.name.toString()
             } })
              .then(response => {
-                 console.log(sessionStorage.getItem('token'));
-                 console.log(sessionStorage.getItem('email'));
-                 console.log(response.data);
+                //  console.log(sessionStorage.getItem('token'));
+                //  console.log(sessionStorage.getItem('email'));
+                //  console.log(response.data);
                  this.setState({items: response.data});
              })
              .catch(function(error) {
@@ -130,7 +152,9 @@ export default class PurchaseItem extends Component {
                             <th onClick={this.onSort.bind(this,2)}>Available</th>
                             <th onClick={this.onSort.bind(this,3)}>Price</th>
                             <th>Email</th>
-                            <th onClick={this.onSort.bind(this,4)}>Rating</th>
+                            <th onClick={this.onSort.bind(this,4)}>Vendor Rating</th>
+                            <th onClick={this.onSort.bind(this,5)}>Product Rating</th>
+                            <th>Image</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,8 +166,11 @@ export default class PurchaseItem extends Component {
                                     <td>{currentItem.quantity}</td>
                                     <td>{currentItem.available}</td>
                                     <td>{currentItem.price}</td>
-                                    <td>{currentItem.email}</td>
+                                    <td id="email">{currentItem.email}</td>
                                     <td>{currentItem.ratingno===0 ? "0" : currentItem.rating/currentItem.ratingno}</td>
+                                    <td>{currentItem.cratingno===0 ? "0" : currentItem.crating/currentItem.cratingno}</td>
+                                    <td>{currentItem.productImage ? <img src={currentItem.productImage} style={{width:150, height:100}} /> : ''}</td>
+                                    {/* <button id="review" style={{margin:30}} className="btn btn-primary">Get Review</button> */}
                                 </tr>
                             )
                         })

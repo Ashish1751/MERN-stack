@@ -19,10 +19,10 @@ export default class ItemsList extends Component {
               show: this.state.show
             } })
              .then(response => {
-                 console.log(sessionStorage.getItem('token'));
-                 console.log(sessionStorage.getItem('email'));
-                 console.log(sessionStorage.getItem('type'));
-                 console.log(response.data);
+                //  console.log(sessionStorage.getItem('token'));
+                //  console.log(sessionStorage.getItem('email'));
+                //  console.log(sessionStorage.getItem('type'));
+                //  console.log(response.data);
                  this.setState({items: response.data});
              })
              .catch(function(error) {
