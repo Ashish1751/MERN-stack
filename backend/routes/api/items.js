@@ -75,7 +75,9 @@ router.post('/edit', (req,res) => {
     console.log(myquery);
     console.log(newavailable);
     var newvalues ={ "status":"Ordered",$set:{ "bought.$.quantity": Number(req.body.quant)}, $inc:{"available":newavailable}};
-    if(req.body.available===(newavailable)*(-1)){
+    console.log(req.body.available)
+    console.log((newavailable)*(-1))
+    if(req.body.available==(newavailable)*(-1)){
         newvalues ={ "status":"Ready to Dispatch", $set:{"bought.$.quantity": Number(req.body.quant)},$inc:{"available":newavailable}};
     }
     console.log(newvalues);
@@ -98,25 +100,65 @@ router.post('/add', (req,res) => {
     .then(items => {
         Item.find({"name":{$regex: "^"+req.body.name+"$",$options:"$i"}})
             .then(items1 => {
+                // const newItem;
+    if(items1[0]){
     const newItem = new Item({
         name: req.body.name,
         quantity: req.body.quantity,
         price: req.body.price,
         available:req.body.quantity,
         email: req.body.email,
-        rating: items.rating,
-        ratingno: items.ratingno,
-        crating: items1.cratingno,
-        cratingno: items1.cratingno,
+        rating: items1[0].rating,
+        ratingno: items1[0].ratingno,
+        crating: items1[0].cratingno,
+        cratingno: items1[0].cratingno,
         review: items1.review
-    });
-
+    })
     newItem.save()
         .then(item => res.json(item))
         .catch(err => {
             console.log(err);
             res.status(400).send(err);
-    });}) })
+    });
+    ;}
+    else if(items[0]){
+        const newItem = new Item({
+            name: req.body.name,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            available:req.body.quantity,
+            email: req.body.email,
+            rating: items[0].rating,
+            ratingno: items[0].ratingno
+        });
+        newItem.save()
+        .then(item => res.json(item))
+        .catch(err => {
+            console.log(err);
+            res.status(400).send(err);
+        });
+    }
+    else{
+        const newItem = new Item({
+            name: req.body.name,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            available:req.body.quantity,
+            email: req.body.email
+        });
+        newItem.save()
+        .then(item => res.json(item))
+        .catch(err => {
+            console.log(err);
+            res.status(400).send(err);
+    });
+    }
+
+    console.log(items1)
+    if(items[0]){
+        console.log(items1[0].rating)
+    }
+    }) })
 });
 
 router.post('/upload',upload.single('productImage'), (req,res) => {
@@ -206,7 +248,7 @@ router.post('/prating', (req,res) => {
 router.post('/reviews', (req,res) => {
     console.log(req.body.quant)
     var myquery = {"name":req.body.name, "quantity": req.body.quantity,"price": req.body.price, "available":req.body.available,"email": req.body.email};
-    Item.updateOne(myquery,{"review":req.body.quant})
+    Item.updateOne(myquery,{$push:{"review":req.body.quant}})
         .then(item => {res.json(item), console.log(item)})
         .catch(err => {
             console.log(err);

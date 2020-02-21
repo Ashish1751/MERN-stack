@@ -8,7 +8,8 @@ export default class Login extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            msg:''
         }
     }
 
@@ -33,11 +34,13 @@ export default class Login extends Component {
                 console.log(sessionStorage.getItem('type'));
                 // this.changeState(sessionStorage.getItem('token'),true,false);
                  {sessionStorage.getItem('type')==="Vendor" ? window.open('http://localhost:3000/items', "_self") : window.open('http://localhost:3000/citems', "_self")}
-                });
+                })
+                .catch(err => {this.setState({msg : err.response.data.msg})});
 
         this.setState({
             email: '',
-            password: ''
+            password: '',
+            msg:''
         });
     }
 
@@ -45,6 +48,7 @@ export default class Login extends Component {
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
+                    {this.state.msg ? <div className="alert alert-danger">{this.state.msg}</div>:""}
                     <div className="form-group">
                         <label>Email: </label>
                         <input type="email" 

@@ -65,7 +65,7 @@ export default class CreateItem extends Component {
                                className="form-control" 
                                name = "name"
                                required
-                               value={this.state.username}
+                               value={this.state.name}
                                onChange={this.onChange}
                                />
                     </div>
@@ -92,7 +92,7 @@ export default class CreateItem extends Component {
                                />  
                     </div>
                     <div className="form-group">
-                        <label>Price: </label>
+                        <label>Image: </label>
                         <input type="file" 
                                className="form-control" 
                                name="productImage"

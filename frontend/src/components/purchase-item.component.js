@@ -42,30 +42,7 @@ export default class PurchaseItem extends Component {
                     .then(res => {console.log(res.data); window.location.reload();})
                     .catch(err => console.log(err));
             }
-            // alert(tableData);
         });
-
-        // $('tbody').on('click', '#review', function() {
-        //     var tableData = $(this).siblings("td").map(function(){
-        //         return $(this).text();
-        //     }).get();
-
-        //     axios.get(' http://localhost:4000/api/items/review', {
-        //         params:{
-        //             email:tableData[4]
-        //         }
-        //     })
-        //             .then(res => {
-        //                 var i = res.data.length;
-        //                 var data ='';
-        //                 for(var j=0;j<i;j++){
-        //                     data = data.toString() + res.data[j].review.toString() + "\n"
-        //                 }
-        //                 alert(data)
-        //             })
-        //             .catch(err => console.log(err));
-        //     // alert(tableData);
-        // });
     }
     
     onChange = (e) => {
@@ -84,12 +61,12 @@ export default class PurchaseItem extends Component {
             shouldSwitch = false;
             x = rows[i].getElementsByTagName("TD")[n];
             y = rows[i + 1].getElementsByTagName("TD")[n];
-            if (dir == "asc") {
+            if (dir === "asc") {
               if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                 shouldSwitch = true;
                 break;
               }
-            } else if (dir == "desc") {
+            } else if (dir === "desc") {
               if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                 shouldSwitch = true;
                 break;
@@ -101,7 +78,7 @@ export default class PurchaseItem extends Component {
             switching = true;
             switchcount ++;
           } else {
-            if (switchcount == 0 && dir == "asc") {
+            if (switchcount === 0 && dir === "asc") {
               dir = "desc";
               switching = true;
             }
@@ -125,6 +102,7 @@ export default class PurchaseItem extends Component {
              .catch(function(error) {
                  console.log(error);
              })
+        this.setState({name:''})
     }
 
     render() {
@@ -169,7 +147,7 @@ export default class PurchaseItem extends Component {
                                     <td id="email">{currentItem.email}</td>
                                     <td>{currentItem.ratingno===0 ? "0" : currentItem.rating/currentItem.ratingno}</td>
                                     <td>{currentItem.cratingno===0 ? "0" : currentItem.crating/currentItem.cratingno}</td>
-                                    <td>{currentItem.productImage ? <img src={currentItem.productImage} style={{width:150, height:100}} /> : ''}</td>
+                                    <td>{currentItem.productImage ? <img alt="img" src={currentItem.productImage} style={{width:150, height:100}} /> : ''}</td>
                                     {/* <button id="review" style={{margin:30}} className="btn btn-primary">Get Review</button> */}
                                 </tr>
                             )

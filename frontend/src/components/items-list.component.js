@@ -117,7 +117,7 @@ export default class ItemsList extends Component {
                             <th>Available</th>
                             <th>Price</th>
                             <th>Status</th>
-                            <th>0</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>

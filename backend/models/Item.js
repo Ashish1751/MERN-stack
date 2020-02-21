@@ -45,8 +45,7 @@ let Item = new mongoose.Schema({
         default: 0
     },
     review:{
-        type: String,
-        default:'H'
+        type: Array
     },
     productImage: {
         type:String

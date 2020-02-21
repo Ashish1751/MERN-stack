@@ -9,6 +9,7 @@ import CitemsList from './components/citems-list.component'
 import Login from './components/login.component'
 import CreateItem from './components/create-item.component'
 import PurchaseItem from './components/purchase-item.component'
+import Review from './components/review.component'
 
 class App extends Component {
   state = {
@@ -66,6 +67,9 @@ class App extends Component {
                 <li className="navbar-item">
                   <Link to="/purchase" className="nav-link">Purchase Item</Link>
                 </li>
+                <li className="navbar-item">
+                  <Link to="/review" className="nav-link">Vendor Review</Link>
+                </li>
                 <li className="navbar-item"><Link onClick={this.logoutfunc} to="#" className="nav-link">Logout</Link></li>
                 </Fragment>} 
               </ul>
@@ -80,6 +84,7 @@ class App extends Component {
           <Route path="/login" state={this.state} changeState={this.changeState} component={Login}/>
           <Route path="/add" component={CreateItem}/>
           <Route path="/purchase" component={PurchaseItem}/>
+          <Route path="/review" component={Review}/>
         </div>
       </Router>
     );

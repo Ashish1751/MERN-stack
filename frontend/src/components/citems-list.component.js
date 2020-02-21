@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import $ from 'jquery';
 
@@ -83,30 +83,6 @@ export default class ItemsList extends Component {
             }
          });
 
-         $('tbody').on('click', '#reviews', function() {
-                var tableData = $(this).siblings("td").map(function(){
-                    return $(this).text();
-                }).get();
-
-                // console.log(tableData[6])
-    
-                axios.get(' http://localhost:4000/api/items/review', {
-                    params:{
-                        email:tableData[6]
-                    }
-                })
-                        .then(res => {
-                            var i = res.data.length;
-                            var data ='';
-                            for(var j=0;j<i;j++){
-                                data = data + res.data[j].review + "\n"
-                            }
-                            alert(data)
-                        })
-                        .catch(err => console.log(err));
-                // alert(tableData);
-            });
-
          $('tbody').on('click', '#rating', function() {
             var tableData = $(this).siblings("td").map(function(){
                 return $(this).text();
@@ -133,10 +109,10 @@ export default class ItemsList extends Component {
             var tableData = $(this).siblings("td").map(function(){
                 return $(this).text();
             }).get();
-            var quan = prompt("Please Enter Rating: ");
+            var quan = prompt("Please Give your Review: ");
             while(quan === ""){
-                alert("Rating field is required");
-                quan = prompt("Please Enter Rating: ");
+                alert("Field is required");
+                quan = prompt("Please Give your Review: ");
             }
             if(quan){
                 const newItem = {
@@ -206,9 +182,6 @@ export default class ItemsList extends Component {
                             <th>Email</th>
                             <th></th>
                             <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -229,11 +202,8 @@ export default class ItemsList extends Component {
                                             <td>{currentItem.price}</td>
                                             <td>{currentItem.status}</td>
                                             <td>{currentItem.email}</td>
-                                            <td id="edit"><button>Edit Order</button></td>
-                                            {this.state.rating===0 ? <td id="rating"><button>Give Vendor Rating</button></td> : <td></td>}
-                                            <td id="prating"><button>Give Product Rating</button></td>
-                                            <td id="review"><button>Give Vendor Review</button></td>
-                                            <td id="reviews"><button>Get Vendor Review</button></td>
+                                            <td id="edit"><button style={{"width": "9vw", "border-radius":"5%"}}>Edit Order</button></td>
+                                            {this.state.rating===0 ? <td id="rating"><button style={{"width": "9vw", "border-radius":"5%"}}>Give Vendor Rating</button></td> : <td></td>}
                                         </tr>
                                     )
                                 })
@@ -241,7 +211,7 @@ export default class ItemsList extends Component {
                         })
                     }
                     </tbody>
-                </table>: 
+                </table>: this.state.show==="2" ?
                 <table className="table table-striped">
                 <thead>
                     <tr>
@@ -261,18 +231,58 @@ export default class ItemsList extends Component {
                 { 
                     this.state.items.map((currentItem, i) => {
                         return (
-                            <tr key={i}>
-                                <td>{currentItem.name}</td>
-                                <td>{currentItem.quantity}</td>
-                                <td>{currentItem.bought[i].quantity}</td>
-                                <td>{currentItem.available}</td>
-                                <td>{currentItem.price}</td>
-                                <td>{currentItem.status}</td>
-                                <td>{currentItem.email}</td>
-                                <td><button id="rating">Give Vendor Rating</button></td>
-                                <td><button id="prating">Give Product Rating</button></td>
-                                <td><button id="review">Give Product Review</button></td>
-                            </tr>
+                            currentItem.bought.map((no,j) => {
+                                return (
+                                    <tr key={i,j}>
+                                        <td>{currentItem.name}</td>
+                                        <td>{currentItem.quantity}</td>
+                                        <td key={j}>{no.quantity}</td>
+                                        <td>{currentItem.available}</td>
+                                        <td>{currentItem.price}</td>
+                                        <td>{currentItem.status}</td>
+                                        <td>{currentItem.email}</td>
+                                        <td id="rating"><button style={{"width": "9vw", "border-radius":"5%"}}>Give Vendor Rating</button></td>
+                                        <td id="prating"><button style={{"width": "9vw", "border-radius":"5%"}}>Give Product Rating</button></td>
+                                        <td id="review"><button style={{"width": "9vw", "border-radius":"5%"}}>Give Product Review</button></td>
+                                    </tr>
+                                )
+                            })
+                        )
+                    })
+                }
+                </tbody>
+            </table> : 
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Ordered Quantity</th>
+                        <th>Available</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                { 
+                    this.state.items.map((currentItem, i) => {
+                        return (
+                            currentItem.bought.map((no,j) => {
+                                return (
+                                    <tr key={i,j}>
+                                        <td>{currentItem.name}</td>
+                                        <td>{currentItem.quantity}</td>
+                                        <td key={j}>{no.quantity}</td>
+                                        <td>{currentItem.available}</td>
+                                        <td>{currentItem.price}</td>
+                                        <td>{currentItem.status}</td>
+                                        <td>{currentItem.email}</td>
+                                        <td id="rating"><button style={{"width": "9vw", "border-radius":"5%"}}>Give Vendor Rating</button></td>
+                                    </tr>
+                                )
+                            })
                         )
                     })
                 }
